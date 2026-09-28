@@ -45,7 +45,7 @@ E-commerce Store Management API Testing/
     ├── Collection8-DataDriven-Report.html
     ├── E-commerce Store Management.html
     └── newman-data-driven-results.png
-
+```text
     ---
 
 ## 📊 Test Execution Results
@@ -71,5 +71,4 @@ The latest data-driven execution completed successfully:
 
 The complete HTML Newman report is available in:
 
-```text
 Newman/Collection8-DataDriven-Report.html
