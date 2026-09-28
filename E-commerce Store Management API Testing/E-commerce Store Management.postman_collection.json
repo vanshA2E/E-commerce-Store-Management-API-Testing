@@ -1,0 +1,1664 @@
+﻿{
+	"info": {
+		"_postman_id": "d96b634c-48fa-48d5-abc1-29a5e768b441",
+		"name": "E-commerce Store Management",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "42219620",
+		"_collection_link": "https://chirag-9426.postman.co/workspace/Postman-API-Fundamentals-Studen~d2d0d6b6-c5bc-406b-8dcd-4f9164889558/collection/42219620-d96b634c-48fa-48d5-abc1-29a5e768b441?action=share&source=collection_link&creator=42219620"
+	},
+	"item": [
+		{
+			"name": "Collection 1: User Management API",
+			"item": [
+				{
+					"name": "Test Case 1: GET All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Check that the status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Check that the response is JSON\r",
+									"pm.test(\"Response is JSON\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"// Parse the response body\r",
+									"let responseData = pm.response.json();\r",
+									"\r",
+									"// Check that the response is an array (list of users)\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    pm.expect(responseData).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"// Optional: Check that at least one user is returned\r",
+									"pm.test(\"At least one user is returned\", function () {\r",
+									"    pm.expect(responseData.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Optional: Check that each user has required properties (id, email, username)\r",
+									"pm.test(\"Each user has id, email, and username\", function () {\r",
+									"    responseData.forEach(function(user) {\r",
+									"        pm.expect(user).to.have.property(\"id\");\r",
+									"        pm.expect(user).to.have.property(\"email\");\r",
+									"        pm.expect(user).to.have.property(\"username\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"console.log(\"Store URL being used:\", pm.variables.get(\"store_url\"));"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{store_url}}/users",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 2: GET Single User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let user = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: Response is an object\r",
+									"pm.test(\"Response is an object\", function () {\r",
+									"    pm.expect(user).to.be.an('object');\r",
+									"});\r",
+									"\r",
+									"// Test: User has id, email, and username\r",
+									"pm.test(\"User has id, email, and username\", function () {\r",
+									"    pm.expect(user).to.have.property(\"id\");\r",
+									"    pm.expect(user).to.have.property(\"email\");\r",
+									"    pm.expect(user).to.have.property(\"username\");\r",
+									"});\r",
+									"\r",
+									"// Test: User ID matches the requested user_id (type-safe)\r",
+									"pm.test(\"User ID matches the requested user_id\", function () {\r",
+									"    pm.expect(String(user.id)).to.eql(String(pm.variables.get(\"user_id\")));\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Check if user_id is set; if not, set a default value (e.g., \"1\")\r",
+									"if (!pm.variables.get(\"user_id\")) {\r",
+									"    pm.variables.set(\"user_id\", \"1\");\r",
+									"    console.log(\"user_id was not set. Defaulting to 1.\");\r",
+									"} else {\r",
+									"    console.log(\"Using user_id:\", pm.variables.get(\"user_id\"));\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{store_url}}/users/{{user_id}}",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 3: POST Create User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User created\", () => pm.response.to.have.status(200));\r",
+									"const json = pm.response.json();\r",
+									"pm.expect(json).to.have.property(\"id\");\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"test@example.com\",\r\n  \"username\": \"testuser\",\r\n  \"password\": \"1234\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{store_url}}/users",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 4: PUT Update User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Status code is 200 OK or 204 No Content\r",
+									"pm.test(\"Status code is 200 or 204\", function () {\r",
+									"    pm.expect([200, 204]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Check that the response is JSON\r",
+									"pm.test(\"Response is JSON\", function () {\r",
+									"    pm.response.to.be.withBody;\r",
+									"    pm.response.to.be.json;\r",
+									"});\r",
+									"\r",
+									"// Parse the response body\r",
+									"let responseData = pm.response.json();\r",
+									"\r",
+									"// Check that the email and username are updated correctly\r",
+									"pm.test(\"Email is updated\", function () {\r",
+									"    pm.expect(responseData.email).to.eql(\"updated@example.com\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Username is updated\", function () {\r",
+									"    pm.expect(responseData.username).to.eql(\"updateduser\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"User ID is present if returned\", function () {\r",
+									"    if (responseData && responseData.id) {\r",
+									"        pm.expect(responseData).to.have.property(\"id\");\r",
+									"    } else {\r",
+									"        pm.expect.fail(\"User ID not present in response\");\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Ensure user_id is set (from previous test or set default)\r",
+									"if (!pm.variables.get(\"user_id\")) {\r",
+									"    pm.variables.set(\"user_id\", \"1\"); // Default to 1 if not set\r",
+									"    console.log(\"user_id was not set. Defaulting to 1.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"updated@example.com\",\r\n  \"username\": \"updateduser\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{store_url}}/users/1",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 5: PATCH Update User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Ensure user_id is set (from previous test or set default)\r",
+									"if (!pm.variables.get(\"user_id\")) {\r",
+									"    pm.variables.set(\"user_id\", \"1\"); // Default to 1 if not set\r",
+									"    console.log(\"user_id was not set. Defaulting to 1.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let user = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK or 204 No Content\r",
+									"pm.test(\"Status code is 200 or 204\", function () {\r",
+									"    pm.expect([200, 204]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// If response body is present, check updated fields\r",
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"User object contains email\", function () {\r",
+									"       // pm.expect(user).to.have.property(\"id\");\r",
+									"        pm.expect(user).to.have.property(\"email\");\r",
+									"    });\r",
+									"\r",
+									"    pm.test(\"Email is updated\", function () {\r",
+									"    pm.expect(user.email).to.eql(\"rathavachirag@gmail.com\");\r",
+									"    });\r",
+									"   \r",
+									"}\r",
+									"\r",
+									"// Log the result\r",
+									"console.log(\"Patch response:\", pm.response.text());\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"email\": \"rathavachirag@gmail.com\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{store_url}}/users/1",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 6: DELETE User",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// Ensure user_id is set; if not, set a default value\r",
+									"if (!pm.variables.get(\"user_id\")) {\r",
+									"    pm.variables.set(\"user_id\", \"1\"); // Default to 1 if not set\r",
+									"    console.log(\"user_id was not set. Defaulting to 1.\");\r",
+									"} else {\r",
+									"    console.log(\"Deleting user_id:\", pm.variables.get(\"user_id\"));\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Status code is 200, 202, or 204 (common for DELETE)\r",
+									"pm.test(\"Status code is 200, 202, or 204\", function () {\r",
+									"    pm.expect([200, 202, 204]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Optional: If your API returns a response body, you can check for a success message or deleted user info\r",
+									"if (pm.response.code === 200 || pm.response.code === 202) {\r",
+									"    let response = pm.response.json();\r",
+									"    pm.test(\"Response contains success or deleted user info\", function () {\r",
+									"        pm.expect(response).to.be.an(\"object\");\r",
+									"        // Check for a message or id (customize as per your API)\r",
+									"        pm.expect(Object.keys(response).length).to.be.above(0);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"// Optional: Clear the user_id variable after deletion\r",
+									"pm.variables.unset(\"user_id\");\r",
+									"console.log(\"user_id variable cleared after deletion.\");\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{store_url}}/users/1",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collection 2: Product Management API",
+			"item": [
+				{
+					"name": "Test Case 7: GET All Products",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response\r",
+									"let products = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: Response is an array\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    pm.expect(products).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"// Test: At least one product is returned\r",
+									"pm.test(\"At least one product is returned\", function () {\r",
+									"    pm.expect(products.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Test: Each product has id, title, and price\r",
+									"pm.test(\"Each product has id, title, and price\", function () {\r",
+									"    products.forEach(function(product) {\r",
+									"        pm.expect(product).to.have.property(\"id\");\r",
+									"        pm.expect(product).to.have.property(\"title\");\r",
+									"        pm.expect(product).to.have.property(\"price\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the first product's id and title for use in later requests\r",
+									"if (products.length > 0) {\r",
+									"    pm.collectionVariables.set(\"product_id\", String(products[0].id));\r",
+									"    pm.collectionVariables.set(\"product_name\", products[0].title);\r",
+									"    console.log(\"Saved product_id:\", products[0].id);\r",
+									"    console.log(\"Saved product_name:\", products[0].title);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{store_url}}/products",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 8: GET Products by Category",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let products = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: Response is an array\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    pm.expect(products).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"// Test: At least one product is returned\r",
+									"pm.test(\"At least one product is returned\", function () {\r",
+									"    pm.expect(products.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Test: Each product has id, title, and price\r",
+									"pm.test(\"Each product has id, title, and price\", function () {\r",
+									"    products.forEach(function(product) {\r",
+									"        pm.expect(product).to.have.property(\"id\");\r",
+									"        pm.expect(product).to.have.property(\"title\");\r",
+									"        pm.expect(product).to.have.property(\"price\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the first product's id and title for future requests\r",
+									"if (products.length > 0) {\r",
+									"    pm.collectionVariables.set(\"product_id\", String(products[0].id));\r",
+									"    pm.collectionVariables.set(\"product_title\", products[0].title);\r",
+									"    console.log(\"Saved product_id:\", products[0].id);\r",
+									"    console.log(\"Saved product_title:\", products[0].title);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{store_url}}/products/category/electronics",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"products",
+								"category",
+								"electronics"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 9: POST New Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let product = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 201 Created or 200 OK\r",
+									"pm.test(\"Status code is 201 or 200\", function () {\r",
+									"    pm.expect([201, 200]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Test: Product object contains id, title, and price\r",
+									"pm.test(\"Response contains id, title, and price\", function () {\r",
+									"    pm.expect(product).to.have.property(\"id\");\r",
+									"    pm.expect(product).to.have.property(\"title\");\r",
+									"    pm.expect(product).to.have.property(\"price\");\r",
+									"});\r",
+									"\r",
+									"// Test: Title matches the one sent in the request\r",
+									"pm.test(\"Title matches request\", function () {\r",
+									"    pm.expect(product.title).to.eql(\"Test_Product\");\r",
+									"});\r",
+									"\r",
+									"// Save the new product's id for future requests\r",
+									"pm.collectionVariables.set(\"product_id\", String(product.id));\r",
+									"console.log(\"Created product_id:\", product.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Test_Product\",\r\n  \"price\": 13.5,\r\n  \"description\": \"lorem ipsum\",\r\n  \"image\": \"https://i.pravatar.cc\",\r\n  \"category\": \"electronics\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{store_url}}/products",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"products"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 10: PUT Update Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let product = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200 or 204\", function () {\r",
+									"    pm.expect([200, 204]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Product object contains id, title, and price\", function () {\r",
+									"        pm.expect(product).to.have.property(\"id\");\r",
+									"        pm.expect(product).to.have.property(\"title\");\r",
+									"        pm.expect(product).to.have.property(\"price\");\r",
+									"    });\r",
+									"    pm.test(\"Product title is updated\", function () {\r",
+									"        pm.expect(product.title).to.eql(\"Updated Product\");\r",
+									"    });\r",
+									"    pm.test(\"Product price is updated\", function () {\r",
+									"        pm.expect(product.price).to.eql(99.99);\r",
+									"    });\r",
+									"    pm.test(\"Product ID matches\", function () {\r",
+									"        pm.expect(String(product.id)).to.eql(String(pm.variables.get(\"product_id\")));\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"Updated Product\",\r\n  \"price\": 99.99,\r\n  \"description\": \"updated description\",\r\n  \"image\": \"https://i.pravatar.cc\",\r\n  \"category\": \"electronics\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{store_url}}/products/{{product_id}}",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"products",
+								"{{product_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 11: PATCH Update Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let product = pm.response.json();\r",
+									"\r",
+									"pm.test(\"Status code is 200 or 204\", function () {\r",
+									"    pm.expect([200, 204]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"if (pm.response.code === 200) {\r",
+									"    pm.test(\"Product object contains id and price\", function () {\r",
+									"        pm.expect(product).to.have.property(\"id\");\r",
+									"        pm.expect(product).to.have.property(\"price\");\r",
+									"    });\r",
+									"    pm.test(\"Product price is patched\", function () {\r",
+									"        pm.expect(product.price).to.eql(77.77);\r",
+									"    });\r",
+									"    pm.test(\"Product ID matches\", function () {\r",
+									"        pm.expect(String(product.id)).to.eql(String(pm.variables.get(\"product_id\")));\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"price\": 77.77\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{store_url}}/products/{{product_id}}",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"products",
+								"{{product_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 12: DELETE Product",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200, 202, or 204\", function () {\r",
+									"    pm.expect([200, 202, 204]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Optional: If your API returns a response body\r",
+									"if (pm.response.code === 200 || pm.response.code === 202) {\r",
+									"    let response = pm.response.json();\r",
+									"    pm.test(\"Response contains success or deleted product info\", function () {\r",
+									"        pm.expect(response).to.be.an(\"object\");\r",
+									"        pm.expect(Object.keys(response).length).to.be.above(0);\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{store_url}}/products/20",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"products",
+								"20"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collection 3: Cart Management API",
+			"item": [
+				{
+					"name": "Test Case 14: GET All Carts",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let cart = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 201 Created or 200 OK\r",
+									"pm.test(\"Status code is 201 or 200\", function () {\r",
+									"    pm.expect([201, 200]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Test: Cart object contains id, userId, date, and products\r",
+									"pm.test(\"Response contains id, userId, date, and products\", function () {\r",
+									"    pm.expect(cart).to.have.property(\"id\");\r",
+									"    pm.expect(cart).to.have.property(\"userId\");\r",
+									"    pm.expect(cart).to.have.property(\"date\");\r",
+									"    pm.expect(cart).to.have.property(\"products\");\r",
+									"    pm.expect(cart.products).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"// Test: userId matches the one sent in the request\r",
+									"pm.test(\"userId matches request\", function () {\r",
+									"    pm.expect(cart.userId).to.eql(1);\r",
+									"});\r",
+									"\r",
+									"// Test: products array contains the correct product and quantity\r",
+									"pm.test(\"products array contains correct product and quantity\", function () {\r",
+									"    pm.expect(cart.products[0]).to.have.property(\"productId\", 1);\r",
+									"    pm.expect(cart.products[0]).to.have.property(\"quantity\", 2);\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the new cart's id for future requests\r",
+									"pm.collectionVariables.set(\"cart_id\", String(cart.id));\r",
+									"console.log(\"Created cart_id:\", cart.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userId\": 1,\r\n  \"date\": \"2020-02-03\",\r\n  \"products\": [\r\n    { \"productId\": 1, \"quantity\": 2 }\r\n  ]\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{store_url}}/carts",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 13: POST Create Cart",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let carts = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: Response is an array\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    pm.expect(carts).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"// Test: At least one cart is returned\r",
+									"pm.test(\"At least one cart is returned\", function () {\r",
+									"    pm.expect(carts.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Test: Each cart has id, userId, and products\r",
+									"pm.test(\"Each cart has id, userId, and products\", function () {\r",
+									"    carts.forEach(function(cart) {\r",
+									"        pm.expect(cart).to.have.property(\"id\");\r",
+									"        pm.expect(cart).to.have.property(\"userId\");\r",
+									"        pm.expect(cart).to.have.property(\"products\");\r",
+									"        pm.expect(cart.products).to.be.an('array');\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the first cart's id for future use\r",
+									"if (carts.length > 0) {\r",
+									"    pm.collectionVariables.set(\"cart_id\", String(carts[0].id));\r",
+									"    console.log(\"Saved cart_id:\", carts[0].id);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{store_url}}/carts",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"carts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collection 4: Orders & Auth",
+			"item": [
+				{
+					"name": "Test Case 15: POST Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let response = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: Response contains a token (common for login endpoints)\r",
+									"pm.test(\"Response contains a token\", function () {\r",
+									"    pm.expect(response).to.have.property(\"token\");\r",
+									"    pm.expect(response.token).to.be.a('string').and.not.empty;\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the token as a collection variable for future requests\r",
+									"pm.collectionVariables.set(\"auth_token\", response.token);\r",
+									"console.log(\"Saved auth_token:\", response.token);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"username\": \"mor_2314\",\r\n  \"password\": \"83r5^_\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{store_url}}/auth/login",
+							"host": [
+								"{{store_url}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collection 5: JSONPlaceholder Testing",
+			"item": [
+				{
+					"name": "Test Case 16: GET All Users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let users = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: Response is an array\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    pm.expect(users).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"// Test: At least one user is returned\r",
+									"pm.test(\"At least one user is returned\", function () {\r",
+									"    pm.expect(users.length).to.be.above(0);\r",
+									"});\r",
+									"\r",
+									"// Test: Each user has id, name, username, and email\r",
+									"pm.test(\"Each user has id, name, username, and email\", function () {\r",
+									"    users.forEach(function(user) {\r",
+									"        pm.expect(user).to.have.property(\"id\");\r",
+									"        pm.expect(user).to.have.property(\"name\");\r",
+									"        pm.expect(user).to.have.property(\"username\");\r",
+									"        pm.expect(user).to.have.property(\"email\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the first user's id and username for future requests\r",
+									"if (users.length > 0) {\r",
+									"    pm.collectionVariables.set(\"user_id\", String(users[0].id));\r",
+									"    pm.collectionVariables.set(\"username\", users[0].username);\r",
+									"    console.log(\"Saved user_id:\", users[0].id);\r",
+									"    console.log(\"Saved username:\", users[0].username);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"\",\r\n  \"email\": \"invalid-email\"\r\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 17: GET Single User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let user = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: User object has id, name, username, and email\r",
+									"pm.test(\"User object has id, name, username, and email\", function () {\r",
+									"    pm.expect(user).to.have.property(\"id\");\r",
+									"    pm.expect(user).to.have.property(\"name\");\r",
+									"    pm.expect(user).to.have.property(\"username\");\r",
+									"    pm.expect(user).to.have.property(\"email\");\r",
+									"});\r",
+									"\r",
+									"// Test: User id matches the requested user_id\r",
+									"pm.test(\"User id matches requested user_id\", function () {\r",
+									"    pm.expect(String(user.id)).to.eql(String(pm.variables.get(\"user_id\")));\r",
+									"});\r",
+									"\r",
+									"// (Optional) Log the user info\r",
+									"console.log(\"Fetched user:\", user);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/{{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{{user_id}}"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 18: GET Posts by User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let posts = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: Response is an array\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    pm.expect(posts).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"// Test: All posts belong to the requested user\r",
+									"pm.test(\"All posts belong to the requested user\", function () {\r",
+									"    posts.forEach(function(post) {\r",
+									"        pm.expect(post).to.have.property(\"userId\");\r",
+									"        pm.expect(String(post.userId)).to.eql(String(pm.variables.get(\"user_id\")));\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// Test: Each post has id, title, and body\r",
+									"pm.test(\"Each post has id, title, and body\", function () {\r",
+									"    posts.forEach(function(post) {\r",
+									"        pm.expect(post).to.have.property(\"id\");\r",
+									"        pm.expect(post).to.have.property(\"title\");\r",
+									"        pm.expect(post).to.have.property(\"body\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the first post's id for future use\r",
+									"if (posts.length > 0) {\r",
+									"    pm.collectionVariables.set(\"post_id\", String(posts[0].id));\r",
+									"    console.log(\"Saved post_id:\", posts[0].id);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts?userId={{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "{{user_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 19: POST New Post",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let post = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 201 Created or 200 OK\r",
+									"pm.test(\"Status code is 201 or 200\", function () {\r",
+									"    pm.expect([201, 200]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Test: Response contains id, title, body, and userId\r",
+									"pm.test(\"Response contains id, title, body, and userId\", function () {\r",
+									"    pm.expect(post).to.have.property(\"id\");\r",
+									"    pm.expect(post).to.have.property(\"title\");\r",
+									"    pm.expect(post).to.have.property(\"body\");\r",
+									"    pm.expect(post).to.have.property(\"userId\");\r",
+									"});\r",
+									"\r",
+									"// Test: Title, body, and userId match the request\r",
+									"pm.test(\"Title, body, and userId match request\", function () {\r",
+									"    pm.expect(post.title).to.eql(\"foo\");\r",
+									"    pm.expect(post.body).to.eql(\"bar\");\r",
+									"    pm.expect(post.userId).to.eql(1);\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the new post's id for future requests\r",
+									"pm.collectionVariables.set(\"post_id\", String(post.id));\r",
+									"console.log(\"Created post_id:\", post.id);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"title\": \"foo\",\r\n  \"body\": \"bar\",\r\n  \"userId\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 20: GET Comments by Post ID",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let comments = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: Response is an array\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    pm.expect(comments).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"// Test: All comments belong to the requested post\r",
+									"pm.test(\"All comments belong to the requested post\", function () {\r",
+									"    comments.forEach(function(comment) {\r",
+									"        pm.expect(comment).to.have.property(\"postId\");\r",
+									"        pm.expect(String(comment.postId)).to.eql(String(pm.variables.get(\"post_id\")));\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// Test: Each comment has id, name, email, and body\r",
+									"pm.test(\"Each comment has id, name, email, and body\", function () {\r",
+									"    comments.forEach(function(comment) {\r",
+									"        pm.expect(comment).to.have.property(\"id\");\r",
+									"        pm.expect(comment).to.have.property(\"name\");\r",
+									"        pm.expect(comment).to.have.property(\"email\");\r",
+									"        pm.expect(comment).to.have.property(\"body\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the first comment's id for future use\r",
+									"if (comments.length > 0) {\r",
+									"    pm.collectionVariables.set(\"comment_id\", String(comments[0].id));\r",
+									"    console.log(\"Saved comment_id:\", comments[0].id);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/comments?postId={{post_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"comments"
+							],
+							"query": [
+								{
+									"key": "postId",
+									"value": "{{post_id}}"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 21: Pagination Test",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body\r",
+									"let posts = pm.response.json();\r",
+									"\r",
+									"// Test: Status code is 200 OK\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"\r",
+									"// Test: Response is an array\r",
+									"pm.test(\"Response is an array\", function () {\r",
+									"    pm.expect(posts).to.be.an('array');\r",
+									"});\r",
+									"\r",
+									"// Test: Array length is 5 (pagination limit)\r",
+									"pm.test(\"Array length is 5 (pagination limit)\", function () {\r",
+									"    pm.expect(posts.length).to.eql(5);\r",
+									"});\r",
+									"\r",
+									"// Test: Each post has id, title, body, and userId\r",
+									"pm.test(\"Each post has id, title, body, and userId\", function () {\r",
+									"    posts.forEach(function(post) {\r",
+									"        pm.expect(post).to.have.property(\"id\");\r",
+									"        pm.expect(post).to.have.property(\"title\");\r",
+									"        pm.expect(post).to.have.property(\"body\");\r",
+									"        pm.expect(post).to.have.property(\"userId\");\r",
+									"    });\r",
+									"});\r",
+									"\r",
+									"// (Optional) Save the first post's id for future use\r",
+									"if (posts.length > 0) {\r",
+									"    pm.collectionVariables.set(\"post_id\", String(posts[0].id));\r",
+									"    console.log(\"Saved post_id:\", posts[0].id);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts?_start=0&_limit=5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts"
+							],
+							"query": [
+								{
+									"key": "_start",
+									"value": "0"
+								},
+								{
+									"key": "_limit",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collection 6: Error Handling & Edge Cases",
+			"item": [
+				{
+					"name": "Test Case 22: GET Non-existent User",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Test: Status code is 404 Not Found or 204 No Content or empty object\r",
+									"pm.test(\"Status code is 404 or 204 or empty object\", function () {\r",
+									"    pm.expect([404, 204, 200]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Test: If status is 200, response should be empty object or array\r",
+									"if (pm.response.code === 200) {\r",
+									"    let user = pm.response.json();\r",
+									"    pm.test(\"Response is empty object or array\", function () {\r",
+									"        pm.expect(\r",
+									"            (Array.isArray(user) && user.length === 0) ||\r",
+									"            (typeof user === \"object\" && Object.keys(user).length === 0)\r",
+									"        ).to.be.true;\r",
+									"    });\r",
+									"}\r",
+									"\r",
+									"// Test: If status is 404 or 204, response should be empty\r",
+									"if (pm.response.code === 404 || pm.response.code === 204) {\r",
+									"    pm.test(\"Response body is empty\", function () {\r",
+									"        pm.expect(pm.response.text()).to.satisfy(function(body) {\r",
+									"            return body === \"\" || body === \"{}\" || body === \"[]\";\r",
+									"        });\r",
+									"    });\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/999",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 23: POST Invalid Data",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response body (if any)\r",
+									"let response = {};\r",
+									"try { response = pm.response.json(); } catch(e) {}\r",
+									"\r",
+									"// Test: Status code is 400 Bad Request or 422 Unprocessable Entity\r",
+									"pm.test(\"Status code is 400 or 422\", function () {\r",
+									"    pm.expect([400, 422]).to.include(pm.response.code);\r",
+									"});\r",
+									"\r",
+									"// Test: Response should contain an error message\r",
+									"pm.test(\"Response contains error message\", function () {\r",
+									"    // Some APIs return error as { error: \"...\" } or { message: \"...\" }\r",
+									"    let hasError = response.error || response.message || response.errors;\r",
+									"    pm.expect(hasError, \"Error message present\").to.exist;\r",
+									"});\r",
+									"\r",
+									"// (Optional) Log the error message for debugging\r",
+									"if (response.error || response.message) {\r",
+									"    console.log(\"Error message:\", response.error || response.message);\r",
+									"}\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"name\": \"\",\r\n  \"email\": \"invalid\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collection 7: Performance Testing",
+			"item": [
+				{
+					"name": "Test Case 24: Response Time Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Set your acceptable response time limit in milliseconds\r",
+									"const maxResponseTime = 500;\r",
+									"\r",
+									"// Test: Response time is within acceptable limit\r",
+									"pm.test(`Response time is less than ${maxResponseTime}ms`, function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(maxResponseTime);\r",
+									"});\r",
+									"\r",
+									"// (Optional) Log the actual response time\r",
+									"console.log(\"Actual response time (ms):\", pm.response.responseTime);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Test Case 25: Response Time Check",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Set your acceptable response time limit in milliseconds\r",
+									"const maxResponseTime = 500;\r",
+									"\r",
+									"// Test: Response time is within acceptable limit\r",
+									"pm.test(`Response time is less than ${maxResponseTime}ms`, function () {\r",
+									"    pm.expect(pm.response.responseTime).to.be.below(maxResponseTime);\r",
+									"});\r",
+									"\r",
+									"// (Optional) Log the actual response time\r",
+									"console.log(\"Actual response time (ms):\", pm.response.responseTime);\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/posts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"posts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Collection 8: Data-Driven Testing (CSV)",
+			"item": [
+				{
+					"name": "Test Case 26: Parameterized User Testing",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"User data matches expected values\", function () {\r",
+									"    const jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.name).to.equal(pm.iterationData.get(\"expectedName\"));\r",
+									"    pm.expect(jsonData.email).to.equal(pm.iterationData.get(\"expectedEmail\"));\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/users/{{userId}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"users",
+								"{{userId}}"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "product_id",
+			"value": ""
+		},
+		{
+			"key": "product_name",
+			"value": ""
+		},
+		{
+			"key": "product_title",
+			"value": ""
+		},
+		{
+			"key": "cart_id",
+			"value": ""
+		},
+		{
+			"key": "auth_token",
+			"value": ""
+		},
+		{
+			"key": "user_id",
+			"value": ""
+		},
+		{
+			"key": "username",
+			"value": ""
+		},
+		{
+			"key": "post_id",
+			"value": ""
+		},
+		{
+			"key": "comment_id",
+			"value": ""
+		}
+	]
+}
+
+
