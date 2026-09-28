@@ -28,26 +28,6 @@ The project uses two mock APIs:
 - Node.js / npm
 
 ---
-
-## 📂 Project Structure
-
-```text
-E-commerce Store Management API Testing/
-│
-├── Development.postman_environment.json
-├── E-commerce Store Management.postman_collection.json
-├── ecommerce-store-api_README.md
-├── user_data.csv
-├── package.json
-├── package-lock.json
-│
-└── Newman/
-    ├── Collection8-DataDriven-Report.html
-    ├── E-commerce Store Management.html
-    └── newman-data-driven-results.png
-```text
-    ---
-
 ## 📊 Test Execution Results
 
 The project was validated using **Newman CLI** with the **HTML Extra Reporter**.
@@ -72,3 +52,24 @@ The latest data-driven execution completed successfully:
 The complete HTML Newman report is available in:
 
 Newman/Collection8-DataDriven-Report.html
+
+---
+## 📂 Project Structure
+
+```text
+E-commerce Store Management API Testing/
+│
+├── Development.postman_environment.json
+├── E-commerce Store Management.postman_collection.json
+├── ecommerce-store-api_README.md
+├── user_data.csv
+├── package.json
+├── package-lock.json
+│
+└── Newman/
+    ├── Collection8-DataDriven-Report.html
+    ├── E-commerce Store Management.html
+    └── newman-data-driven-results.png
+```text
+---
+
