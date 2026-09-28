@@ -45,3 +45,31 @@ E-commerce Store Management API Testing/
     ├── Collection8-DataDriven-Report.html
     ├── E-commerce Store Management.html
     └── ecommerce-newman-report.png
+
+    ---
+
+## 📊 Test Execution Results
+
+The project was validated using **Newman CLI** with the **HTML Extra Reporter**.
+
+### 🧪 Data-Driven Testing Dashboard
+
+![Newman Data-Driven Test Results](Newman/newman-data-driven-results.png)
+
+The latest data-driven execution completed successfully:
+
+| Metric | Result |
+|---|---:|
+| Total Iterations | 10 |
+| Total Requests | 10 |
+| Total Assertions | 10 |
+| Failed Tests | 0 |
+| Skipped Tests | 0 |
+| Average Response Time | 220 ms |
+
+**Result: 10/10 iterations passed successfully.** ✅
+
+The complete HTML Newman report is available in:
+
+```text
+Newman/Collection8-DataDriven-Report.html
