@@ -44,7 +44,7 @@ E-commerce Store Management API Testing/
 └── Newman/
     ├── Collection8-DataDriven-Report.html
     ├── E-commerce Store Management.html
-    └── ecommerce-newman-report.png
+    └── newman-data-driven-results.png
 
     ---
 
