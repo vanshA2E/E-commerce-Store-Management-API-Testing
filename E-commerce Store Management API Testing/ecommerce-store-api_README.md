@@ -70,6 +70,5 @@ E-commerce Store Management API Testing/
     ├── Collection8-DataDriven-Report.html
     ├── E-commerce Store Management.html
     └── newman-data-driven-results.png
-```text
----
+
 
